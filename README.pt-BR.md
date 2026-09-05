@@ -14,6 +14,7 @@
 [![Supabase Zero-Trust](https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Resend API](https://img.shields.io/badge/Resend-Automação_Email-000000?style=for-the-badge&logo=resend)](https://resend.com/)
 [![Edge Middleware](https://img.shields.io/badge/Vercel-Edge_HMAC_SHA256-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
+[![Vercel Analytics](https://img.shields.io/badge/Vercel-Analytics_Integrado-000000?style=for-the-badge&logo=vercel)](https://vercel.com/analytics)
 [![Security Audit](https://img.shields.io/badge/Auditoria_Segurança-100%25_Remediada-brightgreen?style=for-the-badge&logo=shield)](#-auditoria-de-segurança-zero-trust--defesa-em-profundidade)
 
 </div>
@@ -126,16 +127,15 @@ Construída com um **design system editorial de luxo** e sustentada por uma **ar
 * **Hierarquia Tipográfica:** Cormorant Garamond (Serif Display Editorial) combinada com Plus Jakarta Sans (Sem serifa moderno e legível).
 * **Layout Desacoplado em 3 Camadas:** Container raiz travado na viewport com `h-screen overflow-hidden`, Sidebar lateral fixa (`aside`), Header superior fixado e rolagem fluida e independente exclusiva para a área de conteúdo (`<main>`).
 
-### 2. Arquitetura de Segurança Zero-Trust & RBAC
+### 2. Segurança Zero-Trust & Validação Stateless de Nonces
+* **Tokens Criptográficos Efêmeros de Sessão:** Nonces UUID únicos de uso único gerados e assinados no servidor com HMAC-SHA256 (validade de 5 min) no endpoint `GET /api/quiz/session`.
+* **Queima Atômica de Nonces:** Execução de `UPDATE` SQL atômico (`UPDATE submission_nonces SET used_at = now() WHERE id = nonce AND used_at IS NULL`), eliminando 100% dos ataques de Replay e automações de bots.
 * **Autenticação HMAC-SHA256 no Edge Runtime:** Validação de assinatura criptográfica nativa via Web Crypto API no `src/middleware.ts`, bloqueando qualquer tentativa de adulteração de cookies antes de chegar ao servidor.
-* **Row Level Security (RLS) Estrito no Supabase PostgreSQL:** 100% das tabelas do banco protegidas por RLS. Clientes anônimos possuem permissão estrita de `INSERT` apenas.
-* **Salvaguarda de Conta Master:** A conta raiz de administração é protegida no nível do servidor contra exclusão ou rebaixamento de privilégios.
-* **Portão de Segurança Pré-Commit Automatizado:** Scanner automatizado em Node.js (`scripts/security-check.mjs`) que audita segredos expostos, executa checagem de tipos estrita (`tsc --noEmit`) e valida o build de produção do Next.js.
+* **Row Level Security (RLS) Estrito no Supabase PostgreSQL:** 100% das tabelas do banco protegidas por RLS com negação implícita (DENY) para acessos anônimos diretos.
 
-### 3. Pipeline Serverless & Integrações em Tempo Real
-* **Motor de E-mails Transacionais com Resend:** Geração de e-mails com sanitização estrita contra injeção de HTML (`escapeHtml`), injeção dinâmica de links de download e monitoramento de entrega.
-* **Sincronização Bidirecional com Kommo CRM:** Integração com o CRM para enriquecimento automático de contatos com a pontuação do quiz e movimentação em etapas do funil de vendas.
-* **Rotina de Manutenção pg_cron:** Heartbeat serverless programado para executar pings periódicos a cada 6 horas em tabelas com RLS, mantendo a instância do Supabase sempre ativa.
+### 3. Orquestração Serverless com Next.js 15 `after()`
+* **Processamento Não-Bloqueante em Background:** Utilização da API `after()` do Next.js 15 para disparar o e-mail transacional do Resend e a sincronização do Kommo CRM em segundo plano, evitando o congelamento prematuro da função na Vercel e respondendo ao lead C-Level imediatamente com status 201.
+* **Telemetria Integrada:** Monitoramento de tráfego integrado nativamente via `@vercel/analytics`.
 
 ---
 
@@ -150,11 +150,10 @@ flowchart TD
     end
 
     subgraph AppLayer ["Next.js 15 App Router Motor Serverless"]
-        Landing["Landing Page Editorial"]
-        QuizEngine["Motor de Quiz em 10 Etapas"]
+        SessionAPI["GET /api/quiz/session (Emite Nonce & Token)"]
+        SubmitAPI["POST /api/quiz/submit (Zod Estrito & Queima Nonce)"]
         AdminHub["Command Center Administrativo em /admin"]
-        EmailService["Servico de E-mail Resend"]
-        CRMSync["Sincronizador Kommo CRM"]
+        BackgroundTask["Next.js 15 after() Motor de Background"]
     end
 
     subgraph DataLayer ["Persistencia de Dados e APIs Externas"]
@@ -164,17 +163,17 @@ flowchart TD
         CronJob["Rotina pg_cron de Manutencao"]
     end
 
-    User -->|"1. Submete Questionario"| QuizEngine
-    QuizEngine -->|"2. INSERT Anonimo Estrito"| SupabaseDB
-    QuizEngine -->|"3. Dispara Envio de E-mail"| EmailService
-    EmailService -->|"4. Entrega Dossie em PDF"| ResendAPI
-    QuizEngine -->|"5. Sincroniza Lead e Score"| CRMSync
-    CRMSync -->|"6. Registra Lead e Oportunidade"| KommoCRM
+    User -->|"1. Solicita Nonce de Sessao"| SessionAPI
+    SessionAPI -->|"2. Registra Nonce"| SupabaseDB
+    User -->|"3. Submete Questionario Assinado"| SubmitAPI
+    SubmitAPI -->|"4. Queima Nonce & Grava Lead"| SupabaseDB
+    SubmitAPI -->|"5. Dispara Background Tasks"| BackgroundTask
+    BackgroundTask -->|"6. Envia Dossie em PDF"| ResendAPI
+    BackgroundTask -->|"7. Registra Oportunidade"| KommoCRM
 
-    Admin -->|"7. Requisicao de Rota Admin"| EdgeMW
-    EdgeMW -->|"8. Valida Assinatura HMAC"| AdminHub
-    AdminHub -->|"9. Consulta com Service Role"| SupabaseDB
-    AdminHub -->|"10. Reenvio e Teste 1-Clique"| EmailService
+    Admin -->|"8. Requisicao de Rota Admin"| EdgeMW
+    EdgeMW -->|"9. Valida Assinatura HMAC"| AdminHub
+    AdminHub -->|"10. Consulta com Service Role"| SupabaseDB
     CronJob -->|"11. Heartbeat a Cada 6h"| SupabaseDB
 ```
 
@@ -191,8 +190,8 @@ A plataforma foi submetida a uma rigorosa **Auditoria de Segurança Zero-Trust**
 
 1. Isolamento de Banco (RLS):     [ APROVADO ] 100% das tabelas protegidas por RLS.
 2. Autorização e RBAC no Edge:    [ APROVADO ] Web Crypto HMAC-SHA256 validado.
-3. Prevenção de Vazamento:        [ APROVADO ] 0 chaves expostas; checagem no startup.
-4. Blindagem de Endpoints:        [ APROVADO ] Whitelist de tabelas; sanitização de CSV.
+3. Prevenção de Vazamento:        [ APROVADO ] Nomenclatura customizada IJ_*; checagem no startup.
+4. Blindagem de Endpoints:        [ APROVADO ] Queima atômica de Nonces; Tokens JWS de 5 min.
 5. Integridade de Código e XSS:   [ APROVADO ] escapeHtml estrito; 0 erros de TypeScript.
 
 ========================================================
@@ -200,36 +199,13 @@ A plataforma foi submetida a uma rigorosa **Auditoria de Segurança Zero-Trust**
 ========================================================
 ```
 
-### Detalhamento das Camadas Remediadas:
-
-#### 1. Isolamento Multi-Tenant & RLS no Banco (Banco sem Tranca)
-* **Defesa:** Habilitação de Row Level Security (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`) em todas as tabelas (`diagnostico de presença-082026`, `qualificacao_leads`, `profiles`, `site_settings`, `diagnosticos`, `_heartbeat`).
-* **Modelo de Acesso:** Chaves públicas `anon` possuem permissão restrita a `INSERT`. Operações de leitura (`SELECT`), atualização (`UPDATE`) e exclusão (`DELETE`) são bloqueadas nativamente no PostgreSQL e reservadas a chamadas autenticadas do backend via `service_role`.
-
-#### 2. RBAC no Edge & Proteção Contra Adulteração (Permissão no Navegador)
-* **Defesa:** Validação criptográfica de sessão HMAC-SHA256 no `src/middleware.ts` utilizando `crypto.subtle` no Edge Runtime da Vercel com tempo de resposta `< 5ms`. Qualquer alteração manual de cookie Base64 resulta em invalidação imediata.
-* **Proteção de Conta Master:** As rotas administrativas bloqueiam no servidor qualquer tentativa de rebaixamento de privilégios ou exclusão da conta raiz (`natybreis@live.com`).
-
-#### 3. Zero Vazamento de Segredos (Segredo Vazando)
-* **Defesa:** Eliminação de fallbacks inseguros e inclusão de verificações defensivas no startup (`src/lib/security/auth.ts`), emitindo alertas críticos se chaves como `SECURITY_PEPPER_KEY` ou `SUPABASE_SERVICE_ROLE_KEY` não estiverem configuradas em produção.
-
-#### 4. Fortificação de Endpoints & Proteção contra IDOR (Porta Aberta)
-* **Defesa:**
-  * O endpoint público de registro (`/api/admin/register`) foi fechado, exigindo autenticação de `superadmin` ou token criptográfico de convite.
-  * Rotas de manipulação de leads utilizam whitelist estrita de tabelas (`ALLOWED_TABLES`), impedindo mutações em tabelas de sistema.
-  * O exportador de CSV neutraliza injeções de fórmulas no Excel em campos que iniciem com `=`, `@`, `+`, `-`.
-
-#### 5. Sanitização de Dados & Integridade de Código
-* **Defesa:** Escape estrito de caracteres HTML (`escapeHtml()`) aplicado a todas as variáveis dinâmicas injetadas nos templates de e-mail do Resend.
-* **Verificação Estática:** 100% de tipagem estrita no TypeScript com `tsc --noEmit` apresentando 0 erros.
-
 ---
 
 ## 🛠️ Matriz de Tecnologias & Frameworks
 
 | Camada | Tecnologias Utilizadas | Justificativa Técnica |
 | :--- | :--- | :--- |
-| **Frontend Framework** | `Next.js 15.1.7` (App Router) + `React 19` | Server Components, Renderização no Edge e Prerender Híbrido Estático/Dinâmico. |
+| **Frontend Framework** | `Next.js 15.1.7` (App Router) + `React 19` | Server Components, Renderização no Edge e `after()` em Background. |
 | **Linguagem** | `TypeScript 5.7` (Modo Estrito) | 100% de segurança de tipos, 0 erros de compilação e interfaces robustas. |
 | **Estilização & UI** | `Tailwind CSS 3.4` + `Framer Motion 12` | Classes utilitárias atômicas, micro-interações de luxo e animações por GPU. |
 | **Visualização de Dados** | `Chart.js 4.5` + `React-Chartjs-2` | Gráficos do tipo Radar (Spider Chart), barras de aquisição e tendências. |
@@ -237,6 +213,7 @@ A plataforma foi submetida a uma rigorosa **Auditoria de Segurança Zero-Trust**
 | **Segurança no Edge** | `Web Crypto API` (`crypto.subtle`) | Assinatura e verificação de sessões com HMAC-SHA256 no Edge sem cold start. |
 | **Infraestrutura de E-mail** | `Resend API` + Template HTML Custom | Entrega rápida serverless, conformidade DKIM/SPF e logs de entrega. |
 | **Integração com CRM** | `Kommo CRM REST API` + Webhooks | Captura em tempo real, enriquecimento de leads e automação de oportunidades. |
+| **Telemetria & Analytics** | `@vercel/analytics` | Contagem de visitantes e métricas de desempenho com privacidade. |
 | **Deploy & Hospedagem** | `Vercel Serverless & Edge Network` | CDN global, latência sub-milissegundo e CI/CD contínuo. |
 
 ---
@@ -249,15 +226,6 @@ A plataforma foi submetida a uma rigorosa **Auditoria de Segurança Zero-Trust**
 * 🎯 **Otimização de SEO:** `100 / 100` (Schema JSON-LD estruturado, OpenGraph, tags canônicas e Sitemap XML)
 * ⏱️ **Latência de Autenticação no Edge:** `< 5ms`
 * 📦 **Bundle JavaScript Compartilhado:** `~103 kB`
-
----
-
-## 💼 Impacto Comercial & Geração de Negócios
-
-* **Conversão de Alto Padrão:** Transforma visitantes do site em leads executivos altamente qualificados através de pontuação psicométrica interativa.
-* **Feedback Instantâneo:** Entrega o diagnóstico e o guia em PDF em poucos segundos, aumentando taxas de abertura e engajamento.
-* **Operação Comercial Automatizada:** Elimina inserções manuais de dados, conectando as respostas e o perfil do lead diretamente no pipeline do CRM.
-* **Autoridade Editorial:** Eleva a percepção de valor da marca pessoal da consultora ao patamar das grandes casas de consultoria internacionais.
 
 ---
 

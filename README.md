@@ -14,6 +14,7 @@
 [![Supabase Zero-Trust](https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Resend API](https://img.shields.io/badge/Resend-Email_Automation-000000?style=for-the-badge&logo=resend)](https://resend.com/)
 [![Edge Middleware](https://img.shields.io/badge/Vercel-Edge_HMAC_SHA256-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
+[![Vercel Analytics](https://img.shields.io/badge/Vercel-Analytics_Integrated-000000?style=for-the-badge&logo=vercel)](https://vercel.com/analytics)
 [![Security Audit](https://img.shields.io/badge/Security_Audit-100%25_Remediated-brightgreen?style=for-the-badge&logo=shield)](#-zero-trust-security-audit--defense-in-depth)
 
 </div>
@@ -126,16 +127,15 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 * **Typography Hierarchy:** Cormorant Garamond (Editorial Serif Display) paired with Plus Jakarta Sans (Clean Modern Sans-Serif).
 * **Decoupled 3-Layer Layout:** Root container locked with `h-screen overflow-hidden`, static pinned Sidebar (`aside`), fixed top Header navbar, and independent fluid scrolling for the main content area (`<main>`).
 
-### 2. Zero-Trust Security & RBAC Infrastructure
+### 2. Zero-Trust Security & Stateless Nonce Verification
+* **Stateless Cryptographic Session Tokens:** Single-use UUID nonces generated server-side and signed with HMAC-SHA256 (5-minute expiration) in `GET /api/quiz/session`.
+* **Atomic Nonce Burning:** Serverless handler performs atomic SQL updates (`UPDATE submission_nonces SET used_at = now() WHERE id = nonce AND used_at IS NULL`) completely eliminating Replay Attacks and bot spam.
 * **Edge Runtime HMAC-SHA256 Authentication:** Custom Web Crypto API cryptographic signature validation in `src/middleware.ts` preventing cookie tampering and base64 forgery.
-* **Strict Supabase PostgreSQL Row Level Security (RLS):** 100% of database tables protected with RLS. Public anonymous clients are restricted exclusively to `INSERT` operations on the diagnostic quiz.
-* **Master Admin Safeguard:** Root administrator account protected server-side against unauthorized privilege alteration or deletion.
-* **Automated Pre-Commit Security Gate:** Custom automated CLI scanner (`scripts/security-check.mjs`) auditing source code against exposed secrets, strict TypeScript compilation (`tsc --noEmit`), and Next.js production build verification.
+* **Strict Supabase PostgreSQL Row Level Security (RLS):** 100% of database tables protected with RLS. Public anonymous clients have zero direct table access (implicit deny).
 
-### 3. High-Throughput Serverless Pipeline & Integrations
-* **Resend Transactional Email Engine:** High-deliverability HTML email generation with strict entity escaping (`escapeHtml`) preventing HTML injection, dynamic PDF download link injection, and real-time delivery logs.
-* **Bidirectional CRM Synchronization:** Kommo CRM (formerly AmoCRM) pipeline integrating lead qualification data, custom score fields, and automated deal stage transitions.
-* **Database Maintenance & Keep-Alive:** Automated `pg_cron` serverless heartbeat routine executing periodic health pings on isolated RLS tables to prevent Supabase tier sleep states.
+### 3. Next.js 15 Serverless `after()` Background Orchestration
+* **Non-Blocking Background Tasks:** Uses Next.js 15 `after()` to dispatch Resend transactional emails and Kommo CRM sync in background without delaying the HTTP 201 response and preventing Vercel instance freezing.
+* **Integrated Telemetry:** Web Analytics integrated seamlessly via `@vercel/analytics`.
 
 ---
 
@@ -150,11 +150,10 @@ flowchart TD
     end
 
     subgraph AppLayer ["Next.js 15 App Router Serverless Engine"]
-        Landing["Landing and Editorial UI"]
-        QuizEngine["10-Step Assessment Engine"]
+        SessionAPI["GET /api/quiz/session (Issues Nonce & Token)"]
+        SubmitAPI["POST /api/quiz/submit (Strict Zod & Nonce Burn)"]
         AdminHub["Admin Command Center on /admin"]
-        EmailService["Resend Email Service"]
-        CRMSync["Kommo CRM Sync Handler"]
+        BackgroundTask["Next.js 15 after() Background Engine"]
     end
 
     subgraph DataLayer ["Data Persistence and External APIs"]
@@ -164,17 +163,17 @@ flowchart TD
         CronJob["pg_cron Background Keep-Alive"]
     end
 
-    User -->|"1. Submits Diagnostic Quiz"| QuizEngine
-    QuizEngine -->|"2. Anon INSERT Only"| SupabaseDB
-    QuizEngine -->|"3. Triggers Email Dispatch"| EmailService
-    EmailService -->|"4. Sends Dossier and PDF"| ResendAPI
-    QuizEngine -->|"5. Syncs Lead and Score"| CRMSync
-    CRMSync -->|"6. Upserts Contact and Deal"| KommoCRM
+    User -->|"1. Requests Session Nonce"| SessionAPI
+    SessionAPI -->|"2. Records Nonce"| SupabaseDB
+    User -->|"3. Submits Signed Assessment"| SubmitAPI
+    SubmitAPI -->|"4. Atomic Nonce Burn & Insert"| SupabaseDB
+    SubmitAPI -->|"5. Dispatches Background Tasks"| BackgroundTask
+    BackgroundTask -->|"6. Sends Dossier & PDF"| ResendAPI
+    BackgroundTask -->|"7. Upserts Lead & Deal"| KommoCRM
 
-    Admin -->|"7. Admin Route Request"| EdgeMW
-    EdgeMW -->|"8. Verifies HMAC Signature"| AdminHub
-    AdminHub -->|"9. Service Role Query"| SupabaseDB
-    AdminHub -->|"10. 1-Click Retest and Resend"| EmailService
+    Admin -->|"8. Admin Route Request"| EdgeMW
+    EdgeMW -->|"9. Verifies HMAC Signature"| AdminHub
+    AdminHub -->|"10. Service Role Query"| SupabaseDB
     CronJob -->|"11. 6h Keep-Alive Heartbeat"| SupabaseDB
 ```
 
@@ -189,10 +188,10 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 🛡️  SECURITY CONFORMANCE & VERIFICATION MATRIX
 ========================================================
 
-1. Database Isolation (RLS):      [ PASSED ] 100% of tables locked with RLS.
+1. Database Isolation (RLS):      [ PASSED ] 100% of tables locked with RLS (Zero anon access).
 2. Authorization & RBAC:          [ PASSED ] Edge Web Crypto HMAC-SHA256 verification.
-3. Secret Exposure Prevention:    [ PASSED ] 0 exposed service keys; startup validation.
-4. Endpoint Fortification:        [ PASSED ] Whitelist table routing; CSV formula sanitizer.
+3. Secret Exposure Prevention:    [ PASSED ] Custom IJ_* naming; startup validation.
+4. Endpoint Fortification:        [ PASSED ] Atomic Nonce Burn; Stateless JWS session tokens.
 5. Code Integrity & XSS:          [ PASSED ] Strict escapeHtml(); 0 TypeScript errors.
 
 ========================================================
@@ -200,36 +199,13 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 ========================================================
 ```
 
-### Detailed Remediation Breakdown:
-
-#### 1. Database Multi-Tenant Isolation & RLS (Banco sem Tranca)
-* **Defense:** Enabled Row Level Security (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`) on all tables (`diagnostico de presença-082026`, `qualificacao_leads`, `profiles`, `site_settings`, `diagnosticos`, `_heartbeat`).
-* **Access Model:** Public `anon` keys are constrained to `INSERT` operations only. All reading (`SELECT`), updating (`UPDATE`), and deleting (`DELETE`) are blocked at the PostgreSQL database engine level and reserved exclusively for authenticated backend calls using `service_role`.
-
-#### 2. Edge RBAC & Signature Tampering (Permissão no Navegador)
-* **Defense:** Implemented cryptographic HMAC-SHA256 session signature verification in `src/middleware.ts` using `crypto.subtle` on the Vercel Edge Runtime with `< 5ms` execution time. Any modification of base64 cookie payloads results in immediate session invalidation.
-* **Master Account Shield:** Backend routes enforce immutable protections for root administrator accounts (`natybreis@live.com`), rejecting unauthorized permission downgrades or deletion attempts.
-
-#### 3. Secret Zero-Exposure (Segredo Vazando)
-* **Defense:** Removed all hardcoded fallback secrets. Added defensive runtime startup checks in `src/lib/security/auth.ts` halting execution if production security keys (`SECURITY_PEPPER_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) are missing.
-
-#### 4. Endpoint Fortification & IDOR Defense (Porta Aberta)
-* **Defense:**
-  * Public registration endpoint (`/api/admin/register`) locked down, requiring active `superadmin` authentication or cryptographic invite tokens.
-  * Lead manipulation routes enforce strict whitelist table routing (`ALLOWED_TABLES`) preventing arbitrary database mutation.
-  * CSV export engine sanitizes text fields against spreadsheet formula injection (`=`, `@`, `+`, `-`).
-
-#### 5. Data Sanitization & Code Integrity
-* **Defense:** Strict HTML entity escaping (`escapeHtml()`) applied to all dynamic email parameters before injection into Resend templates.
-* **Static Verification:** 100% strict TypeScript types validated with `tsc --noEmit` with 0 warnings or errors.
-
 ---
 
 ## 🛠️ Complete Tech Stack & Framework Matrix
 
 | Layer | Technologies & Frameworks | Key Rationale |
 | :--- | :--- | :--- |
-| **Frontend Framework** | `Next.js 15.1.7` (App Router) + `React 19` | Server Components, Edge Rendering, Hybrid Static/Dynamic Prerendering. |
+| **Frontend Framework** | `Next.js 15.1.7` (App Router) + `React 19` | Server Components, Edge Rendering, `after()` Background Tasks. |
 | **Language** | `TypeScript 5.7` (Strict Mode) | 100% type safety, zero compile warnings, robust domain interfaces. |
 | **Styling & Design** | `Tailwind CSS 3.4` + `Framer Motion 12` | Atomic utility classes, luxury micro-interactions, hardware-accelerated animations. |
 | **Data Visualization** | `Chart.js 4.5` + `React-Chartjs-2` | Interactive radar spider charts, acquisition bar charts, conversion trends. |
@@ -237,6 +213,7 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 | **Edge Security** | `Web Crypto API` (`crypto.subtle`) | Cryptographic HMAC-SHA256 session signature verification at the edge with zero cold starts. |
 | **Email Infrastructure** | `Resend API` + Custom HTML Engine | Ultra-fast serverless delivery, DKIM/SPF compliance, transactional tracking. |
 | **CRM Integration** | `Kommo CRM REST API` + Webhooks | Real-time lead capture, score attribution, executive pipeline orchestration. |
+| **Analytics & Telemetry** | `@vercel/analytics` | Privacy-focused real-time visitor counting and performance metrics. |
 | **Deployment & Hosting** | `Vercel Serverless & Edge Network` | Global CDN edge caching, sub-millisecond response times, instant CI/CD. |
 
 ---
@@ -249,15 +226,6 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 * 🎯 **SEO Optimization Score:** `100 / 100` (Structured JSON-LD Schema, OpenGraph, Canonical tags, XML Sitemap)
 * ⏱️ **Edge Authentication Latency:** `< 5ms`
 * 📦 **First Load JS Shared Bundle:** `~103 kB`
-
----
-
-## 💼 Business & Lead Generation Impact
-
-* **High-Ticket Conversion:** Transforms passive website visitors into pre-qualified executive leads via interactive psychometric scoring.
-* **Instant Gratification:** Delivers tailored diagnostic feedback within seconds, boosting open and click-through rates.
-* **Automated Sales Ops:** Eliminates manual data entry by synchronizing lead answers, contact information, and scores directly into the CRM pipeline.
-* **Editorial Authority:** Elevates the client's personal brand to the standard of global luxury consulting houses.
 
 ---
 
