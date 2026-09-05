@@ -1,6 +1,12 @@
 ﻿# 🏛️ Isabel Juliane — Arquitetura da Presença™
 ### Enterprise Full-Stack Luxury EdTech & Executive Personal Branding Platform
 
+<div align="center">
+
+[🇺🇸 English Version](./README.md) &nbsp;•&nbsp; [🇧🇷 Versão em Português](./README.pt-BR.md)
+
+<br/>
+
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.1.7-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -9,6 +15,8 @@
 [![Resend API](https://img.shields.io/badge/Resend-Email_Automation-000000?style=for-the-badge&logo=resend)](https://resend.com/)
 [![Edge Middleware](https://img.shields.io/badge/Vercel-Edge_HMAC_SHA256-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
 [![Security Audit](https://img.shields.io/badge/Security_Audit-100%25_Remediated-brightgreen?style=for-the-badge&logo=shield)](#-zero-trust-security-audit--defense-in-depth)
+
+</div>
 
 ---
 
@@ -135,39 +143,39 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["Client & Edge Layer (Vercel)"]
-        User["Visitor / Executive Lead"]
+    subgraph ClientLayer ["Client and Edge Layer on Vercel"]
+        User["Visitor or Executive Lead"]
         Admin["Isabel Juliane Admin"]
-        EdgeMW["Edge Runtime Middleware (HMAC-SHA256 Verification)"]
+        EdgeMW["Edge Runtime Middleware with HMAC-SHA256"]
     end
 
-    subgraph AppLayer ["Next.js 15 App Router (Serverless)"]
-        Landing["Landing & Editorial UI"]
+    subgraph AppLayer ["Next.js 15 App Router Serverless Engine"]
+        Landing["Landing and Editorial UI"]
         QuizEngine["10-Step Assessment Engine"]
-        AdminHub["Admin Command Center (/admin)"]
-        EmailService["Resend Email Service (HTML Template Engine)"]
+        AdminHub["Admin Command Center on /admin"]
+        EmailService["Resend Email Service"]
         CRMSync["Kommo CRM Sync Handler"]
     end
 
-    subgraph DataLayer ["Data & External Services"]
-        SupabaseDB[("Supabase PostgreSQL (Strict RLS Policies)")]
-        ResendAPI["Resend Email API (High Deliverability)"]
-        KommoCRM["Kommo CRM (Lead Pipelines & Custom Fields)"]
+    subgraph DataLayer ["Data Persistence and External APIs"]
+        SupabaseDB[("Supabase PostgreSQL with Strict RLS")]
+        ResendAPI["Resend Email API"]
+        KommoCRM["Kommo CRM Pipelines"]
         CronJob["pg_cron Background Keep-Alive"]
     end
 
-    User -->|1. Browses & Submits Quiz| QuizEngine
-    QuizEngine -->|2. Anon INSERT Only| SupabaseDB
-    QuizEngine -->|3. Dispatches Transactional Email| EmailService
-    EmailService -->|4. Delivers Custom Dossier| ResendAPI
-    QuizEngine -->|5. Syncs Lead & Score| CRMSync
-    CRMSync -->|6. Upserts Contact & Deal| KommoCRM
+    User -->|"1. Submits Diagnostic Quiz"| QuizEngine
+    QuizEngine -->|"2. Anon INSERT Only"| SupabaseDB
+    QuizEngine -->|"3. Triggers Email Dispatch"| EmailService
+    EmailService -->|"4. Sends Dossier and PDF"| ResendAPI
+    QuizEngine -->|"5. Syncs Lead and Score"| CRMSync
+    CRMSync -->|"6. Upserts Contact and Deal"| KommoCRM
 
-    Admin -->|7. Access Request /admin| EdgeMW
-    EdgeMW -->|8. Validates Cryptographic Signature| AdminHub
-    AdminHub -->|9. Service Role Query (Read/Write)| SupabaseDB
-    AdminHub -->|10. 1-Click Retest & Lead Resend| EmailService
-    CronJob -->|11. 6h Keep-Alive Heartbeat| SupabaseDB
+    Admin -->|"7. Admin Route Request"| EdgeMW
+    EdgeMW -->|"8. Verifies HMAC Signature"| AdminHub
+    AdminHub -->|"9. Service Role Query"| SupabaseDB
+    AdminHub -->|"10. 1-Click Retest and Resend"| EmailService
+    CronJob -->|"11. 6h Keep-Alive Heartbeat"| SupabaseDB
 ```
 
 ---
