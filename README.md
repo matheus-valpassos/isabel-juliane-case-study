@@ -1,4 +1,4 @@
-﻿# 🏛️ Isabel Juliane — Arquitetura da Presença™
+# 🏛️ Isabel Juliane — Arquitetura da Presença™
 ### Enterprise Full-Stack Luxury EdTech & Executive Personal Branding Platform
 
 <div align="center">
@@ -10,12 +10,12 @@
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.1.7-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Clean Architecture](https://img.shields.io/badge/Clean_Architecture-Domain_Driven-blueviolet?style=for-the-badge)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Supabase Zero-Trust](https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Resend API](https://img.shields.io/badge/Resend-Email_Automation-000000?style=for-the-badge&logo=resend)](https://resend.com/)
-[![Edge Middleware](https://img.shields.io/badge/Vercel-Edge_HMAC_SHA256-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
-[![Vercel Analytics](https://img.shields.io/badge/Vercel-Analytics_Integrated-000000?style=for-the-badge&logo=vercel)](https://vercel.com/analytics)
-[![Security Audit](https://img.shields.io/badge/Security_Audit-100%25_Remediated-brightgreen?style=for-the-badge&logo=shield)](#-zero-trust-security-audit--defense-in-depth)
+[![Meta WhatsApp 2026](https://img.shields.io/badge/WhatsApp-Meta_Official_2026-25D366?style=for-the-badge&logo=whatsapp)](https://wa.me/)
+[![Security Audit](https://img.shields.io/badge/Security_Audit-100%25_Approved-brightgreen?style=for-the-badge&logo=shield)](#-zero-trust-security-audit--defense-in-depth)
 
 </div>
 
@@ -23,9 +23,15 @@
 
 ## 🌟 Executive Summary & Overview
 
-**Isabel Juliane — Arquitetura da Presença™** is a high-performance, enterprise-grade digital platform engineered for high-ticket executive personal branding, leadership styling, and non-verbal communication diagnostics. 
+**Isabel Juliane — Arquitetura da Presença™** is a high-performance, enterprise-grade digital platform engineered for high-ticket executive personal branding, leadership styling, and non-verbal communication diagnostics for C-Level executives and high-net-worth leaders.
 
-Designed with an **editorial luxury design system** and powered by a **Zero-Trust serverless architecture**, the application delivers an end-to-end client journey: from high-converting interactive psychometric assessment to instant dynamic dossier generation, automated transactional PDF delivery via **Resend**, and real-time bidirectional synchronization with **Kommo CRM** and **Supabase PostgreSQL**.
+Designed with an **editorial luxury design system**, structured with **Clean Architecture (Domain, Application, Infrastructure, Presentation)**, and fortified under a **Zero-Trust security model**, the application delivers an end-to-end client journey:
+- Interactive multi-step psychometric assessment with stateless atomic nonces.
+- Instant dynamic dossier generation and archetype classification.
+- Automated transactional PDF delivery via **Resend API**.
+- Official Meta click-to-chat WhatsApp integration (+55 22 92014-8816) on the 12-step **`/analise-presenca`** executive onboarding flow.
+- Real-time bidirectional CRM orchestration with **Kommo CRM** and **Supabase PostgreSQL**.
+- Complete Admin Command Center (`/admin/diagnosticos`) with visual **CTA & WhatsApp Route Editor**, Kanban task board, and Sharp-powered WebP image conversion.
 
 > [!NOTE]
 > **Portfolio & Architecture Showcase:** This repository is an architectural case study. Proprietary client source code, customer personal data, and exclusive business algorithms are obfuscated under client NDA. All architecture patterns, schema designs, security models, and UI engineering demonstrated here are authentic and representative of production standards.
@@ -38,7 +44,7 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 
 ![Platform Live Walkthrough Demo](./screenshots/00-platform-demo-recording.webp)
 
-*Interactive walkthrough demonstrating seamless navigation across editorial landing pages, multi-step psychometric quiz, Edge-authenticated login, and real-time admin command center.*
+*Interactive walkthrough demonstrating seamless navigation across editorial landing pages, multi-step psychometric quiz, Edge-authenticated login, dynamic CTA editor, and real-time admin command center.*
 
 </div>
 
@@ -69,15 +75,15 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 
 ---
 
-### 4. Application & Executive Onboarding (`/boas-vindas`)
-*Dedicated high-ticket onboarding page for executive mentoring candidates.*
+### 4. Executive Onboarding & 12-Step Application (`/analise-presenca`)
+*Comprehensive onboarding questionnaire with dynamic WhatsApp integration and legacy `/boas-vindas` backward compatibility.*
 
 ![Executive Onboarding Experience](./screenshots/04-boas-vindas-aplicacao.png)
 
 ---
 
 ### 5. Edge-Secured Admin Login Screen (`/admin/login`)
-*Cryptographically defended login card featuring Web Crypto HMAC-SHA256 signature generation, anti-bot honeypots, and custom interactive captcha.*
+*Cryptographically defended login card featuring Argon2id password verification, anti-bot honeypots, and custom interactive captcha.*
 
 ![Admin Login Screen](./screenshots/05-admin-login-screen.png)
 
@@ -105,7 +111,7 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 ---
 
 ### 9. Dynamic Photography Gallery & Asset Management
-*Centralized visual asset manager allowing instant updates to site imagery and editorial photography.*
+*Centralized visual asset manager allowing instant updates to site imagery with automated Sharp WebP conversion and Supabase Storage persistence.*
 
 ![Admin Media Gallery](./screenshots/09-admin-galeria-fotos.png)
 
@@ -122,20 +128,26 @@ Designed with an **editorial luxury design system** and powered by a **Zero-Trus
 
 ## ⚡ Key Technical Highlights
 
-### 1. Editorial Luxury Design System & Fluid UX
-* **Custom Color Palette:** Warm Cream (`#FAF8F5`), Deep Chocolate (`#2C2420`), and Signature Wine/Burgundy (`#661D28`).
-* **Typography Hierarchy:** Cormorant Garamond (Editorial Serif Display) paired with Plus Jakarta Sans (Clean Modern Sans-Serif).
-* **Decoupled 3-Layer Layout:** Root container locked with `h-screen overflow-hidden`, static pinned Sidebar (`aside`), fixed top Header navbar, and independent fluid scrolling for the main content area (`<main>`).
+### 1. Clean Architecture & Modular Core Engine
+* **Domain Layer:** Pure business entities (`LeadQuiz`, `SessionNonce`) and value objects without framework dependencies.
+* **Application Layer:** Port interfaces (`ILeadRepository`, `INonceRepository`, `IEmailService`, `ICRMService`) and decoupled use cases (`SubmitQuizUseCase`, `CreateQuizSessionUseCase`).
+* **Infrastructure Layer:** Concretions for Supabase Admin, Sharp Image Processing, Resend Email, and Kommo CRM.
+* **Presentation Layer:** Next.js 15 App Router route handlers with strict Zod parsing and server-rendered views.
 
 ### 2. Zero-Trust Security & Stateless Nonce Verification
 * **Stateless Cryptographic Session Tokens:** Single-use UUID nonces generated server-side and signed with HMAC-SHA256 (5-minute expiration) in `GET /api/quiz/session`.
 * **Atomic Nonce Burning:** Serverless handler performs atomic SQL updates (`UPDATE submission_nonces SET used_at = now() WHERE id = nonce AND used_at IS NULL`) completely eliminating Replay Attacks and bot spam.
-* **Edge Runtime HMAC-SHA256 Authentication:** Custom Web Crypto API cryptographic signature validation in `src/middleware.ts` preventing cookie tampering and base64 forgery.
-* **Strict Supabase PostgreSQL Row Level Security (RLS):** 100% of database tables protected with RLS. Public anonymous clients have zero direct table access (implicit deny).
+* **Strict Supabase PostgreSQL Row Level Security (RLS):** 100% of database tables protected with RLS. Public anonymous clients have zero direct table access (`REVOKE ALL FROM anon`).
+* **HTTP Security Headers & Strict CSP:** Injected Content-Security-Policy, HSTS Preload (2 years), X-Frame-Options DENY, X-Content-Type-Options nosniff, and Permissions-Policy.
 
-### 3. Next.js 15 Serverless `after()` Background Orchestration
-* **Non-Blocking Background Tasks:** Uses Next.js 15 `after()` to dispatch Resend transactional emails and Kommo CRM sync in background without delaying the HTTP 201 response and preventing Vercel instance freezing.
-* **Integrated Telemetry:** Web Analytics integrated seamlessly via `@vercel/analytics`.
+### 3. Meta Official WhatsApp Click-to-Chat Integration
+* **International Number Standard:** Automatically formats destination numbers (`5522920148816`) into strict Meta specification `https://wa.me/<number>?text=<encoded_text>`.
+* **Official 2026 Vector Glyphs:** Integrated Meta WhatsApp SVG vector assets in 3 luxury styling variations (*Green*, *Editorial White*, *Chocolate*).
+* **Live Admin Route Editor (Tab 9):** Dedicated panel allowing non-technical managers to edit WhatsApp messages, phone numbers, and destination CTAs without code redeployments.
+
+### 4. Next.js 15 Serverless `after()` Background Orchestration
+* **Non-Blocking Background Tasks:** Uses Next.js 15 `after()` to dispatch Resend transactional emails and Kommo CRM sync in the background, returning an instant `HTTP 201 Created` response (~50ms) to C-Level visitors.
+* **Dual Storage Architecture:** Public `site-media` bucket for global CDN image delivery with Sharp WebP compression; private bucket for sensitive executive dossiers.
 
 ---
 
@@ -158,13 +170,13 @@ flowchart TD
 
     subgraph DataLayer ["Data Persistence and External APIs"]
         SupabaseDB[("Supabase PostgreSQL with Strict RLS")]
+        StorageBucket[("Supabase Storage (site-media)")]
         ResendAPI["Resend Email API"]
         KommoCRM["Kommo CRM Pipelines"]
-        CronJob["pg_cron Background Keep-Alive"]
     end
 
     User -->|"1. Requests Session Nonce"| SessionAPI
-    SessionAPI -->|"2. Records Nonce"| SupabaseDB
+    SessionAPI -->|"2. Records Nonce UUID"| SupabaseDB
     User -->|"3. Submits Signed Assessment"| SubmitAPI
     SubmitAPI -->|"4. Atomic Nonce Burn & Insert"| SupabaseDB
     SubmitAPI -->|"5. Dispatches Background Tasks"| BackgroundTask
@@ -174,7 +186,7 @@ flowchart TD
     Admin -->|"8. Admin Route Request"| EdgeMW
     EdgeMW -->|"9. Verifies HMAC Signature"| AdminHub
     AdminHub -->|"10. Service Role Query"| SupabaseDB
-    CronJob -->|"11. 6h Keep-Alive Heartbeat"| SupabaseDB
+    AdminHub -->|"11. Media Upload (Sharp WebP)"| StorageBucket
 ```
 
 ---
@@ -189,10 +201,10 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 ========================================================
 
 1. Database Isolation (RLS):      [ PASSED ] 100% of tables locked with RLS (Zero anon access).
-2. Authorization & RBAC:          [ PASSED ] Edge Web Crypto HMAC-SHA256 verification.
-3. Secret Exposure Prevention:    [ PASSED ] Custom IJ_* naming; startup validation.
+2. Authorization & RBAC:          [ PASSED ] Argon2id hash + Edge HMAC-SHA256 verification.
+3. Secret Exposure Prevention:    [ PASSED ] Custom IJ_* naming; 0 hardcoded secrets.
 4. Endpoint Fortification:        [ PASSED ] Atomic Nonce Burn; Stateless JWS session tokens.
-5. Code Integrity & XSS:          [ PASSED ] Strict escapeHtml(); 0 TypeScript errors.
+5. Code Integrity & XSS:          [ PASSED ] Strict Zod .strict(); escapeHtml(); 0 TS errors.
 
 ========================================================
 🏆 FINAL AUDIT RESULT: 0 OPEN VULNERABILITIES (A+ GRADE)
@@ -205,15 +217,17 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 
 | Layer | Technologies & Frameworks | Key Rationale |
 | :--- | :--- | :--- |
+| **Architecture** | `Clean Architecture` (DDD Core) | Domain, Application, Infrastructure, and Presentation separation. |
 | **Frontend Framework** | `Next.js 15.1.7` (App Router) + `React 19` | Server Components, Edge Rendering, `after()` Background Tasks. |
 | **Language** | `TypeScript 5.7` (Strict Mode) | 100% type safety, zero compile warnings, robust domain interfaces. |
 | **Styling & Design** | `Tailwind CSS 3.4` + `Framer Motion 12` | Atomic utility classes, luxury micro-interactions, hardware-accelerated animations. |
-| **Data Visualization** | `Chart.js 4.5` + `React-Chartjs-2` | Interactive radar spider charts, acquisition bar charts, conversion trends. |
-| **Database & Auth** | `Supabase PostgreSQL` + `Row Level Security` | Zero-Trust isolation, `pgcrypto` password hashing, `uuid-ossp`, `pg_cron`. |
-| **Edge Security** | `Web Crypto API` (`crypto.subtle`) | Cryptographic HMAC-SHA256 session signature verification at the edge with zero cold starts. |
+| **Image Processing** | `Sharp 0.35` (WebP Converter) | Automatic image optimization on upload reducing asset size by up to 80%. |
+| **Data Visualization** | `Chart.js 4.5` + `React-Chartjs-2` | Interactive analytics charts, acquisition trends, conversion metrics. |
+| **Database & Auth** | `Supabase PostgreSQL` + `Row Level Security` | Zero-Trust isolation, `pgcrypto`, `uuid-ossp`, and `is_admin()` Security Definer. |
+| **Object Storage** | `Supabase Storage (site-media)` | Global CDN asset delivery for avatars (`avatars/`) and gallery photography (`isabel/`). |
 | **Email Infrastructure** | `Resend API` + Custom HTML Engine | Ultra-fast serverless delivery, DKIM/SPF compliance, transactional tracking. |
+| **Messaging & CTAs** | `Meta WhatsApp Click-to-Chat` | Direct conversation routing with encoded parameters and official SVG glyphs. |
 | **CRM Integration** | `Kommo CRM REST API` + Webhooks | Real-time lead capture, score attribution, executive pipeline orchestration. |
-| **Analytics & Telemetry** | `@vercel/analytics` | Privacy-focused real-time visitor counting and performance metrics. |
 | **Deployment & Hosting** | `Vercel Serverless & Edge Network` | Global CDN edge caching, sub-millisecond response times, instant CI/CD. |
 
 ---
@@ -231,4 +245,4 @@ The platform was subjected to a comprehensive **Zero-Trust Security Audit** acro
 
 ## 🏷️ Metadata & Search Keywords
 
-`nextjs-15` `react-19` `typescript` `tailwindcss` `supabase` `postgresql-rls` `zero-trust` `resend-email` `kommo-crm` `edge-computing` `hmac-sha256` `web-crypto-api` `editorial-design` `personal-branding` `luxury-ui` `psychometric-assessment` `lead-generation` `saas-dashboard` `chartjs` `portfolio-case-study`
+`nextjs-15` `react-19` `typescript` `clean-architecture` `tailwindcss` `supabase` `postgresql-rls` `zero-trust` `resend-email` `whatsapp-meta` `kommo-crm` `edge-computing` `hmac-sha256` `sharp-webp` `editorial-design` `personal-branding` `luxury-ui` `psychometric-assessment` `lead-generation` `saas-dashboard` `chartjs` `portfolio-case-study`
