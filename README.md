@@ -29,7 +29,7 @@ Designed with an **editorial luxury design system**, structured with **Clean Arc
 - Interactive multi-step psychometric assessment with stateless atomic nonces.
 - Instant dynamic dossier generation and archetype classification.
 - Automated transactional PDF delivery via **Resend API**.
-- Official Meta click-to-chat WhatsApp integration (+55 22 92014-8816) on the 12-step **`/analise-presenca`** executive onboarding flow.
+- Official Meta click-to-chat WhatsApp integration (<numero>) on the 12-step **`/analise-presenca`** executive onboarding flow.
 - Real-time bidirectional CRM orchestration with **Kommo CRM** and **Supabase PostgreSQL**.
 - Complete Admin Command Center (`/admin/diagnosticos`) with visual **CTA & WhatsApp Route Editor**, Kanban task board, and Sharp-powered WebP image conversion.
 
@@ -38,89 +38,84 @@ Designed with an **editorial luxury design system**, structured with **Clean Arc
 
 ---
 
-## 🎬 Live Screen Recording & Interactive Walkthrough
-
-<div align="center">
-
-![Platform Live Walkthrough Demo](./screenshots/00-platform-demo-recording.webp)
-
-*Interactive walkthrough demonstrating seamless navigation across editorial landing pages, multi-step psychometric quiz, Edge-authenticated login, dynamic CTA editor, and real-time admin command center.*
-
-</div>
-
----
-
 ## 📸 Production Screen Showcase & Real-Browser Captures
 
 <div align="center">
 
-### 1. Luxury Editorial Experience (Homepage & Hero)
-*High-end editorial aesthetics with Cormorant Garamond typography, micro-interactions, and high-conversion landing structure.*
-
-![Homepage Editorial Showcase](./screenshots/01-homepage-editorial.png)
-
----
-
-### 2. Multi-Step Strategic Diagnosis Engine (Question 01)
+### 1. Multi-Step Strategic Diagnosis Engine (Question 01)
 *10-step psychometric and visual presence assessment with real-time score calculation, state persistence, and responsive touch controls.*
 
 ![Quiz Diagnostic Engine Step 1](./screenshots/02-quiz-diagnostic-flow.png)
 
 ---
 
-### 3. Interactive Quiz in Progress (Question 04 & Progress Bar)
+### 2. Interactive Quiz in Progress (Question 04 & Progress Bar)
 *Smooth step progression, animated state transitions with Framer Motion, and visual completion indicators.*
 
 ![Quiz Diagnostic Step Active](./screenshots/03-quiz-step-active.png)
 
 ---
 
-### 4. Executive Onboarding & 12-Step Application (`/analise-presenca`)
-*Comprehensive onboarding questionnaire with dynamic WhatsApp integration and legacy `/boas-vindas` backward compatibility.*
-
-![Executive Onboarding Experience](./screenshots/04-boas-vindas-aplicacao.png)
-
----
-
-### 5. Edge-Secured Admin Login Screen (`/admin/login`)
-*Cryptographically defended login card featuring Argon2id password verification, anti-bot honeypots, and custom interactive captcha.*
-
-![Admin Login Screen](./screenshots/05-admin-login-screen.png)
-
----
-
-### 6. Real-Time Analytics & Command Center (`/admin/diagnosticos`)
+### 3. Real-Time Analytics & Command Center (`/admin/diagnosticos`)
 *Decoupled 3-layer administrative interface with locked viewport, sticky sidebar, KPI metric cards, and conversion analytics.*
 
 ![Admin Analytics Dashboard](./screenshots/06-admin-analytics-dashboard.png)
 
 ---
 
-### 7. Lead Intelligence & CRM Pipeline Management
+### 4. Lead Intelligence & CRM Pipeline Management
 *Full lead management table with real-time score attribution, dossier inspection modal, 1-click Resend email re-dispatch, and Kommo CRM synchronization.*
 
 ![Admin Leads CRM Table](./screenshots/07-admin-leads-crm.png)
 
 ---
 
-### 8. Resend Email Automation Hub & Live Delivery Testing
+### 5. Resend Email Automation Hub & Live Delivery Testing
 *Serverless email pipeline featuring live HTML template preview with luxury hero banner, delivery health metrics, and instant homologation test dispatch.*
 
 ![Admin Email Resend Hub](./screenshots/08-admin-email-resend-hub.png)
 
 ---
 
-### 9. Dynamic Photography Gallery & Asset Management
+### 6. Dynamic Photography Gallery & Asset Management
 *Centralized visual asset manager allowing instant updates to site imagery with automated Sharp WebP conversion and Supabase Storage persistence.*
 
 ![Admin Media Gallery](./screenshots/09-admin-galeria-fotos.png)
 
 ---
 
-### 10. Custom SEO & Page Metadata Management
+### 7. Custom SEO & Page Metadata Management
 *Granular control over meta titles, descriptions, and OpenGraph parameters for Google search optimization.*
 
 ![Admin SEO Settings](./screenshots/10-admin-paginas-seo.png)
+
+---
+
+### 8. Meta WhatsApp & Dynamic Route Configuration Editor
+*Visual control panel allowing administrators to customize WhatsApp phone numbers, direct conversation templates, and CTA routing without code changes.*
+
+![WhatsApp Integration & Dynamic Routing](./screenshots/11-whatsapp-integratacao.png)
+
+---
+
+### 9. Admin Profile, Security & Account Audit
+*Dedicated profile and credentials management with Argon2id hashing, activity auditing, and instant role inspection.*
+
+![Admin Profile & Security](./screenshots/12-perfil.png)
+
+---
+
+### 10. Executive Kanban Task & Demand Board
+*Visual drag-and-drop board for prioritizing customer consultations, image revamp deliverables, and high-ticket pipeline stages.*
+
+![Executive Kanban Board](./screenshots/13-kanban-beta.png)
+
+---
+
+### 11. System Configuration, Environment & Vault Settings
+*Comprehensive enterprise console for configuring system parameters, cloud storage buckets, and third-party integrations.*
+
+![System Settings & Configuration](./screenshots/14-admin-configuracao.png)
 
 </div>
 
@@ -141,7 +136,8 @@ Designed with an **editorial luxury design system**, structured with **Clean Arc
 * **HTTP Security Headers & Strict CSP:** Injected Content-Security-Policy, HSTS Preload (2 years), X-Frame-Options DENY, X-Content-Type-Options nosniff, and Permissions-Policy.
 
 ### 3. Meta Official WhatsApp Click-to-Chat Integration
-* **International Number Standard:** Automatically formats destination numbers (`5522920148816`) into strict Meta specification `https://wa.me/<number>?text=<encoded_text>`.
+* **International Number Standard:** Automatically formats destination numbers (`<numero>`) into strict Meta specification `https://wa.me/<number>?text=<encoded_text>`.
+
 * **Official 2026 Vector Glyphs:** Integrated Meta WhatsApp SVG vector assets in 3 luxury styling variations (*Green*, *Editorial White*, *Chocolate*).
 * **Live Admin Route Editor (Tab 9):** Dedicated panel allowing non-technical managers to edit WhatsApp messages, phone numbers, and destination CTAs without code redeployments.
 

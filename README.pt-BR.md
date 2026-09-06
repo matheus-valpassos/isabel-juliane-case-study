@@ -29,7 +29,7 @@ Construída com um **design system editorial de luxo**, estruturada com **Clean 
 - Captação de leads com quiz psicométrico interativo e tokens de uso único (*Nonces atômicos*).
 - Geração instantânea de dossiês personalizados e classificação em 4 arquétipos de presença.
 - Entrega automatizada de e-book em PDF via **Resend API**.
-- Integração oficial com WhatsApp da Meta (+55 22 92014-8816) no onboarding de 12 etapas do **`/analise-presenca`**.
+- Integração oficial com WhatsApp da Meta (<numero>) no onboarding de 12 etapas do **`/analise-presenca`**.
 - Sincronização bidirecional em tempo real com **Kommo CRM** e **Supabase PostgreSQL**.
 - Command Center Administrativo (`/admin/diagnosticos`) com **Editor Visual de Rotas de CTAs & WhatsApp**, Kanban de demandas e conversão automática de imagens para WebP via Sharp.
 
@@ -38,89 +38,84 @@ Construída com um **design system editorial de luxo**, estruturada com **Clean 
 
 ---
 
-## 🎬 Gravação ao Vivo & Demonstração da Plataforma
-
-<div align="center">
-
-![Demonstração da Plataforma ao Vivo](./screenshots/00-platform-demo-recording.webp)
-
-*Gravação contínua da navegação pela plataforma: experiência editorial na landing page, resolução do questionário interativo, autenticação criptográfica, editor de CTAs e painel administrativo em tempo real.*
-
-</div>
-
----
-
 ## 📸 Galeria de Telas em Produção (Capturas Reais do Navegador)
 
 <div align="center">
 
-### 1. Experiência Editorial de Luxo (Homepage & Hero)
-*Estética editorial refinada com tipografia Cormorant Garamond, micro-interações e estrutura de landing page voltada para conversão de alto padrão.*
-
-![Homepage Editorial](./screenshots/01-homepage-editorial.png)
-
----
-
-### 2. Motor de Diagnóstico Estratégico Multietapas (Pergunta 01)
+### 1. Motor de Diagnóstico Estratégico Multietapas (Pergunta 01)
 *Questionário psicométrico e visual de 10 etapas com cálculo de pontuação em tempo real, persistência de estado e controles fluidos.*
 
 ![Diagnóstico de Presença Etapa 1](./screenshots/02-quiz-diagnostic-flow.png)
 
 ---
 
-### 3. Diagnóstico em Andamento (Pergunta 04 & Barra de Progresso)
+### 2. Diagnóstico em Andamento (Pergunta 04 & Barra de Progresso)
 *Progressão fluida entre perguntas, animações aceleradas por hardware via Framer Motion e indicadores de progresso dinâmicos.*
 
 ![Diagnóstico em Andamento](./screenshots/03-quiz-step-active.png)
 
 ---
 
-### 4. Aplicação & Onboarding Executivo em 12 Etapas (`/analise-presenca`)
-*Questionário aprofundado com integração oficial do WhatsApp da Meta e retrocompatibilidade com links legados (`/boas-vindas`).*
-
-![Boas-Vindas e Aplicação](./screenshots/04-boas-vindas-aplicacao.png)
-
----
-
-### 5. Tela de Login Administrativo com Proteção no Edge (`/admin/login`)
-*Card de autenticação protegido por verificação de senha Argon2id, campos honeypot anti-bot e verificação interativa de segurança.*
-
-![Tela de Login](./screenshots/05-admin-login-screen.png)
-
----
-
-### 6. Command Center & Analytics em Tempo Real (`/admin/diagnosticos`)
+### 3. Command Center & Analytics em Tempo Real (`/admin/diagnosticos`)
 *Interface administrativa desacoplada com rolagem independente, cards de métricas em tempo real e gráficos de conversão.*
 
 ![Painel de Analytics](./screenshots/06-admin-analytics-dashboard.png)
 
 ---
 
-### 7. Inteligência de Leads & Gestão de Pipeline de CRM
+### 4. Inteligência de Leads & Gestão de Pipeline de CRM
 *Tabela de leads com visualização de dossiês completos, status do Kommo CRM em tempo real e reenvio de e-mail com 1 clique.*
 
 ![Gestão de Leads e CRM](./screenshots/07-admin-leads-crm.png)
 
 ---
 
-### 8. Central de E-mail Marketing Resend & Homologação ao Vivo
+### 5. Central de E-mail Marketing Resend & Homologação ao Vivo
 *Pipeline serverless de e-mail com preview de template HTML editorial, métricas de entregabilidade e envio de testes instantâneos.*
 
 ![Central de E-mail Resend](./screenshots/08-admin-email-resend-hub.png)
 
 ---
 
-### 9. Galeria Dinâmica de Fotografias & Gestão de Mídia
+### 6. Galeria Dinâmica de Fotografias & Gestão de Mídia
 *Gerenciador centralizado de fotografia com conversão automática para WebP via Sharp e persistência no Supabase Storage.*
 
 ![Galeria de Fotos Admin](./screenshots/09-admin-galeria-fotos.png)
 
 ---
 
-### 10. Gestão Customizada de Páginas & SEO
+### 7. Gestão Customizada de Páginas & SEO
 *Controle granular de metadados, títulos, descrições e OpenGraph para otimização máxima no Google.*
 
 ![Configurações de SEO](./screenshots/10-admin-paginas-seo.png)
+
+---
+
+### 8. Painel de Integração & Editor de Rotas Dinâmicas do WhatsApp
+*Console visual para gerenciar números de telefone, mensagens personalizadas e roteamento direto dos botões de WhatsApp sem necessidade de novos deploys.*
+
+![Integração do WhatsApp e Rotas](./screenshots/11-whatsapp-integratacao.png)
+
+---
+
+### 9. Perfil Administrativo, Segurança da Conta & Auditoria Zero-Trust
+*Módulo de gestão de perfis de operadores e superadministradores com hashing Argon2id, logs de login e auditoria de integridade.*
+
+![Perfil Administrativo e Segurança](./screenshots/12-perfil.png)
+
+---
+
+### 10. Kanban Executivo de Demandas & Tarefas
+*Quadro visual ágil em estilo Kanban para acompanhamento de diagnósticos, consultorias e tarefas de posicionamento estratégico.*
+
+![Quadro Kanban Executivo](./screenshots/13-kanban-beta.png)
+
+---
+
+### 11. Configurações Globais do Sistema, Variáveis de Ambiente & Storage
+*Painel de controle avançado com auditoria de conexões de banco de dados, chaves de API, webhooks e buckets de mídia.*
+
+![Configurações Globais do Sistema](./screenshots/14-admin-configuracao.png)
 
 </div>
 
@@ -141,7 +136,8 @@ Construída com um **design system editorial de luxo**, estruturada com **Clean 
 * **HTTP Security Headers & CSP Rígido:** Injeção de Content-Security-Policy, HSTS Preload (2 anos), X-Frame-Options DENY, X-Content-Type-Options nosniff e Permissions-Policy.
 
 ### 3. Integração Oficial com WhatsApp Click-to-Chat (Padrão Meta)
-* **Formatação Internacional:** Conversão automática de números (`5522920148816`) para a especificação oficial da Meta `https://wa.me/<numero>?text=<mensagem_codificada>`.
+* **Formatação Internacional:** Conversão automática de números (`<numero>`) para a especificação oficial da Meta `https://wa.me/<numero>?text=<mensagem_codificada>`.
+
 * **Glifos Vetoriais Oficiais 2026:** Inclusão de SVGs oficiais da Meta em 3 estilos editoriais (*Verde WhatsApp*, *Branco Editorial*, *Chocolate Luxo*).
 * **Editor Visual de Rotas no Admin (Tab 9):** Painel dedicado que permite à consultora alterar rotas de CTAs, números e mensagens de WhatsApp sem precisar de novo deploy de código.
 
